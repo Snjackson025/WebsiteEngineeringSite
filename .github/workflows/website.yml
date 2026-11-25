@@ -1,0 +1,46 @@
+name: WebsiteEngineeringSite
+
+on:
+  # Runs every day at 06:00 UTC (01:00 EST).
+  schedule:
+    - cron: '0 6 * * *'
+  push:
+    branches: [master]
+    paths:
+      - WebsiteEngineeringSite.cpp
+      - scripts/website-check.sh
+      - .github/workflows/website.yml
+  pull_request:
+    branches: [master]
+    paths:
+      - WebsiteEngineeringSite.cpp
+      - scripts/website-check.sh
+      - .github/workflows/website.yml
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Add MSBuild to PATH
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Build project (Debug x64)
+        run: msbuild WebsiteEngineeringSite.vcxproj /p:Configuration=Debug /p:Platform=x64
+
+      - name: Run smoke test
+        shell: powershell
+        run: |
+          $exe = "x64\Debug\WebsiteEngineeringSite.exe"
+          if (-not (Test-Path $exe)) { throw "Executable missing: $exe" }
+          $input = "7`n5`n0`n"
+          $output = $input | & $exe 2>&1
+          $exitCode = $LASTEXITCODE
+          if ($exitCode -ne 0) { throw "Executable exited with code $exitCode" }
+          if (-not ($output -match "\[HomeEngine\] Initialized")) { throw "Missing '[HomeEngine] Initialized' in output" }
+          if (-not ($output -match "Site built for 'Rosewood Bakery': 4 pages")) { throw "Missing demo site build in output" }
+          if (-not (Test-Path "rosewood_bakery_home.html")) { throw "Missing generated file rosewood_bakery_home.html" }
+          $home = Get-Content "rosewood_bakery_home.html" -Raw
+          if (-not ($home -match "Rosewood Bakery")) { throw "Generated home page missing 'Rosewood Bakery'" }
+          Write-Output "Test passed: WebsiteEngineeringSite.exe ran, exited 0, built the demo site, and wrote the site files."
