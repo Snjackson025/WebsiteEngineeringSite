@@ -3,6 +3,10 @@
 // A customer describes the site or program they need, the Architect
 // character turns the description into a brief, and the builder engines
 // generate the real site files and program scaffolds to suit.
+// NOTE: _CRT_SECURE_NO_WARNINGS must come before the includes: MSVC
+// rejects std::localtime (C4996) without it, and this file timestamps
+// the project memory and event log with localtime.
+#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <string>
 #include <vector>
