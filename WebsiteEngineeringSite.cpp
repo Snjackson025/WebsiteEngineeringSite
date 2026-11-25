@@ -502,9 +502,16 @@ void showMenu() {
               << "Choice: ";
 }
 
-int main() {
+int main(int argc, char* argv[]) {
     CentralNode centralNode;
     centralNode.initialize();
+    // --demo runs the Rosewood Bakery demo with no keyboard input, so
+    // automated tests never depend on piping keystrokes into the menu.
+    if (argc > 1 && std::string(argv[1]) == "--demo") {
+        centralNode.runDemo();
+        centralNode.shutdown();
+        return 0;
+    }
     int choice = -1;
     while (choice != 0) {
         showMenu();

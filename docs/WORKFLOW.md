@@ -22,9 +22,8 @@ option 4 builds the program.
   1. Checks out the repo.
   2. Builds the project in Debug x64 with MSBuild (no `|| echo` — a
      failed build fails the run).
-  3. Runs the smoke test: feeds the demo session (demo, list projects,
-     exit) to `x64\Debug\WebsiteEngineeringSite.exe` and fails unless the
-     exe exits 0, prints `[HomeEngine] Initialized`, reports
+  3. Runs the smoke test: runs the exe with --demo (no piped keystrokes)
+     and fails unless the exe exits 0, prints `[HomeEngine] Initialized`, reports
      `Site built for 'Rosewood Bakery': 4 pages`, and the generated
      `rosewood_bakery_home.html` exists and contains `Rosewood Bakery`.
 
