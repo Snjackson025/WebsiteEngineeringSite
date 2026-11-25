@@ -41,6 +41,6 @@ jobs:
           if (-not ($output -match "\[HomeEngine\] Initialized")) { throw "Missing '[HomeEngine] Initialized' in output" }
           if (-not ($output -match "Site built for 'Rosewood Bakery': 4 pages")) { throw "Missing demo site build in output" }
           if (-not (Test-Path "rosewood_bakery_home.html")) { throw "Missing generated file rosewood_bakery_home.html" }
-          $home = Get-Content "rosewood_bakery_home.html" -Raw
-          if (-not ($home -match "Rosewood Bakery")) { throw "Generated home page missing 'Rosewood Bakery'" }
+          $homePage = Get-Content "rosewood_bakery_home.html" -Raw
+          if (-not ($homePage -match "Rosewood Bakery")) { throw "Generated home page missing 'Rosewood Bakery'" }
           Write-Output "Test passed: WebsiteEngineeringSite.exe ran, exited 0, built the demo site, and wrote the site files."
